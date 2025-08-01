@@ -1,0 +1,40 @@
+/* ElevanceSans-regular */
+@font-face {
+  font-family: 'ElevanceSans';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('ElevanceSans'),
+    local('ElevanceSans-Regular'),
+    url('./ElevanceSans/ElevanceSans-Regular.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+/* ElevanceSans-500 Medium*/
+@font-face {
+  font-family: 'ElevanceSans';
+  font-style: normal;
+  font-weight: 500;
+  src:
+    local('ElevanceSans Medium'),
+    local('ElevanceSans-Medium'),
+    url('./ElevanceSans/ElevanceSans-Medium.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+/* ElevanceSans-600 SemiBold */
+@font-face {
+  font-family: 'ElevanceSans';
+  font-style: normal;
+  font-weight: 600;
+  src:
+    local('ElevanceSans Semibold'),
+    local('ElevanceSans-Semibold'),
+    url('./ElevanceSans/ElevanceSans-Semibold.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+/* ElevanceSans-700 SemiBold */
+@font-face {
+  font-family: 'ElevanceSans';
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local('ElevanceSans Semibold'),
+    local('ElevanceSans-Semibold'),
+    url('./ElevanceSans/ElevanceSans-Bold.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
