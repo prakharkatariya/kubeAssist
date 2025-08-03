@@ -1,9 +1,13 @@
 const path = require("path");
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.json');
+const ESLintPlugin = require('@craco/craco').ESLintPlugin;
 
 module.exports = {
   webpack: {
+    plugins: {
+      remove: ['ESLintWebpackPlugin'],
+    },
     alias: {
       "@": path.resolve(__dirname, "src"),
       // if new aliases added, it should be added in tsconfig.json too and vice-versa

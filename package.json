@@ -4,7 +4,7 @@
   "description": "An intelligent LLM powered platform for both developers and devops engineers",
   "author": "Venkat",
   "licence": "MIT",
-  "homepage": "",
+  "homepage": "/kubeassist",
   "private": false,
   "repository": {
     "type": "git",
@@ -39,12 +39,6 @@
     "use-immer": "^0.11.0",
     "uuid": "^11.0.5",
     "web-vitals": "^2.1.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
