@@ -1,0 +1,11 @@
+build/
+node_modules/
+public/
+*.md
+*.json
+*.yml
+*.yaml
+package-lock.json
+yarn.lock
+.env*
+*.log
