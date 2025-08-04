@@ -1,17 +1,22 @@
 import React from 'react';
 import { RouteItem } from '@/types/nav';
 
-const Login = React.lazy(() => import('@pages/auth/Login'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard'));
+const Chat = React.lazy(() => import('@/pages/chat'));
 
 const routes: RouteItem[] = [
   {
-    path: '/login',
-    element: Login,
+    path: '/dashboard',
+    element: Dashboard,
     roles: ['admin', 'user'],
   },
   {
-    path: '/dashboard',
+    path: '/chat',
+    element: Chat,
+    roles: ['admin', 'user'],
+  },
+  {
+    path: '/',
     element: Dashboard,
     roles: ['admin', 'user'],
   },
