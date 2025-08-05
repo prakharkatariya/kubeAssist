@@ -1,64 +1,106 @@
-import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import './App.css';
-import AuthProvider from '@/contexts/AuthProvider';
-import { NotistackProvider } from '@components/NotistackProvider';
-import Login from '@pages/auth/Login';
-import DefaultLayout from '@layout/defaultLayout';
-import GuestGuard from '@guards/GuestGuard';
-import AppStateProvider from '@/contexts/AppStateProvider';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { NotistackProvider } from '@/components/NotistackProvider';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import GuestRoute from '@/components/auth/GuestRoute';
+import Layout from '@/components/layout/Layout';
+
+// Pages
+import SignIn from '@/pages/auth/SignIn';
+import Dashboard from '@/pages/dashboard';
+import Profile from '@/pages/Profile';
+import Admin from '@/pages/Admin';
+import Unauthorized from '@/pages/Unauthorized';
+import PageNotFound from '@/pages/not-found';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <NotistackProvider>
         <AuthProvider>
           <Routes>
+            {/* Guest Routes */}
             <Route
-              path="/login"
+              path="/signin"
               element={
-                <GuestGuard>
-                  <Login />
-                </GuestGuard>
+                <GuestRoute>
+                  <SignIn />
+                </GuestRoute>
               }
             />
+
+            {/* Protected Routes */}
             <Route
-              path="*"
+              path="/dashboard"
               element={
-                <AppStateProvider>
-                  <DefaultLayout />
-                </AppStateProvider>
+                <ProtectedRoute requiredRoles={['user', 'admin']}>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute requiredRoles={['user', 'admin']}>
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRoles={['admin']}>
+                  <Layout>
+                    <Admin />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Utility Routes */}
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            
+            {/* Default redirect */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* 404 */}
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </AuthProvider>
       </NotistackProvider>
-    </>
+    </ThemeProvider>
   );
 }
 
-const Root: React.FC = () => {
-  const appVersion = process.env.REACT_APP_VERSION;
-  console.log('App version:', appVersion);
-
-  useEffect(() => {
-    const lastVersion = localStorage.getItem('app_version');
-    const currentVersion = process.env.REACT_APP_VERSION || '0.1.0-local';
-
-    if (lastVersion && lastVersion !== currentVersion) {
-      localStorage.setItem('app_version', currentVersion);
-      console.log('Cache clear', 'in-progress');
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.reload();
-      console.log('Cache clear', 'done');
-    } else if (!lastVersion) {
-      localStorage.setItem('app_version', currentVersion);
-    }
-  }, []);
-
-  return <App />;
-};
-
-export default Root;
+export default App;
