@@ -3,19 +3,19 @@ import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import { AuthProvider } from '@/contexts/AuthContext';
-import { NotistackProvider } from '@/components/NotistackProvider';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import GuestRoute from '@/components/auth/GuestRoute';
-import Layout from '@/components/layout/Layout';
+import { AuthProvider } from './contexts/AuthContext';
+import { NotistackProvider } from './components/NotistackProvider';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import GuestRoute from './components/auth/GuestRoute';
+import Layout from './components/layout/Layout';
 
 // Pages
-import SignIn from '@/pages/auth/SignIn';
-import Dashboard from '@/pages/dashboard';
-import Profile from '@/pages/Profile';
-import Admin from '@/pages/Admin';
-import Unauthorized from '@/pages/Unauthorized';
-import PageNotFound from '@/pages/not-found';
+import SignIn from './pages/auth/SignIn';
+import Dashboard from './pages/dashboard';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
+import Unauthorized from './pages/Unauthorized';
+import PageNotFound from './pages/not-found';
 
 const theme = createTheme({
   palette: {

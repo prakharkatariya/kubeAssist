@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Paper, Grid, Card, CardContent } from '@mui/material';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();

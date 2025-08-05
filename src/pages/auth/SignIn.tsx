@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import SignInForm from '@/components/auth/SignInForm';
-import CarelonLogo from '@/assets/images/logo_carelon_text.png';
+import SignInForm from '../../components/auth/SignInForm';
+import CarelonLogo from '../../assets/images/logo_carelon_text.png';
 
 const SignIn: React.FC = () => {
   return (

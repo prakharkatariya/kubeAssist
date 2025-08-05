@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
   Box,
   Button,
@@ -15,39 +12,75 @@ import {
   Stack,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoginCredentials } from '@/types/auth';
+import { useAuth } from '../../contexts/AuthContext';
+import { LoginCredentials } from '../../types/auth';
 
-const schema = z.object({
-  domainId: z.string().min(5, { message: 'Domain ID must be at least 5 characters' }),
-  password: z.string().min(1, { message: 'Password is required' }),
-});
-
-type FormValues = z.infer<typeof schema>;
+interface FormValues {
+  domainId: string;
+  password: string;
+}
 
 const SignInForm: React.FC = () => {
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      domainId: '',
-      password: '',
-    },
+  const [formData, setFormData] = useState<FormValues>({
+    domainId: '',
+    password: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<Partial<FormValues>>({});
 
-  const onSubmit = async (values: FormValues) => {
+  const validateForm = (): boolean => {
+    const errors: Partial<FormValues> = {};
+    
+    if (!formData.domainId.trim()) {
+      errors.domainId = 'Domain ID is required';
+    } else if (formData.domainId.length < 5) {
+      errors.domainId = 'Domain ID must be at least 5 characters';
+    }
+    
+    if (!formData.password.trim()) {
+      errors.password = 'Password is required';
+    }
+    
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleInputChange = (field: keyof FormValues) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+    
+    // Clear field error when user starts typing
+    if (fieldErrors[field]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
+    
+    // Clear general error
+    if (error) {
+      setError('');
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     try {
       setIsLoading(true);
       setError('');
-      await login(values as LoginCredentials);
+      await login(formData as LoginCredentials);
     } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.');
     } finally {
@@ -90,52 +123,42 @@ const SignInForm: React.FC = () => {
             </Typography>
           </Box>
 
-          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+          <Box component="form" onSubmit={handleSubmit}>
             <Stack spacing={2}>
-              <Controller
-                name="domainId"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Domain ID"
-                    fullWidth
-                    error={!!errors.domainId}
-                    helperText={errors.domainId?.message}
-                    disabled={isLoading}
-                    autoFocus
-                  />
-                )}
+              <TextField
+                label="Domain ID"
+                fullWidth
+                value={formData.domainId}
+                onChange={handleInputChange('domainId')}
+                error={!!fieldErrors.domainId}
+                helperText={fieldErrors.domainId}
+                disabled={isLoading}
+                autoFocus
               />
 
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    fullWidth
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                    disabled={isLoading}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={togglePasswordVisibility}
-                            edge="end"
-                            disabled={isLoading}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
+              <TextField
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                value={formData.password}
+                onChange={handleInputChange('password')}
+                error={!!fieldErrors.password}
+                helperText={fieldErrors.password}
+                disabled={isLoading}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={togglePasswordVisibility}
+                        edge="end"
+                        disabled={isLoading}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               {error && (
